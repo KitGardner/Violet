@@ -4,13 +4,19 @@ from discord import Game
 
 
 BOT_PREFIX = ("?", "!", "Violet ", "violet ")
-TOKEN = "NDgxMzIzNjYzNTMxMTgwMDMy.DmeOxg.fHCqzvlcIbXHg-5v58vAyys7t_E"  # Get at discordapp.com/developers/applications/me
+TOKEN = self.GetToken();  #Will validate another time.
 TASK_KEYS = ["Name", "Type", "Category", "Assigned", "Status"];
 
 client = Bot(command_prefix=BOT_PREFIX)
 Manager = TaskManager();
 
-@client.command(name='Hi', 
+def GetToken()
+	with open("environment.json") as readObj:
+		for line in readObj:
+			TokenLine = json.loads(line);
+			return TokenLine["TOKEN"];
+
+@client.command(name='Hi',
 	aliases=['hello', 'Hello', 'Yo', 'Good Evening', 'Konichiwa', 'hi'],
 	pass_context=True)
 async def Hi(context):
@@ -27,7 +33,7 @@ async def CreateTask(context):
 	category = await client.wait_for_message(author=context.message.author);
 	await client.say("Asset type?");
 	assetType = await client.wait_for_message(author=context.message.author);
-	response ="You are creating a task with a name of " + str(taskName.content) + " and is assigned to " + str(assignedTo.content) + ". Is this correct?"	
+	response ="You are creating a task with a name of " + str(taskName.content) + " and is assigned to " + str(assignedTo.content) + ". Is this correct?"
 	await client.say(response);
 	answer = await client.wait_for_message(author=context.message.author);
 	if(answer.content.lower() == 'yes'):
@@ -138,5 +144,5 @@ async def NewTaskManager(context, activeTaskFileName, completedTaskFileName):
 async def on_ready():
     await client.change_presence(game=Game(name="with humans"))
     print("Logged in as " + client.user.name)
-    
+
 client.run(TOKEN)
